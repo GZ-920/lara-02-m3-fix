@@ -57,6 +57,7 @@ public struct LinkCreditIcon: View {
     }
     
     public var body: some View {
+        #if !LC_NO_IOS26_UI
         if #available(iOS 26.0, *) {
             AsyncImage(url: URL(string: url)) { image in
                 image
@@ -70,7 +71,9 @@ public struct LinkCreditIcon: View {
                 ProgressView()
                     .frame(width: 40, height: 40)
             }
-        } else {
+        } else
+        #endif
+        {
             AsyncImage(url: URL(string: url)) { image in
                 image
                     .resizable()

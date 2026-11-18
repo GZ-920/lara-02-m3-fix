@@ -82,6 +82,10 @@ struct ActionBG: ViewModifier {
             if #available(iOS 26.0, *) {
                 content
                     .glassEffect(.clear.interactive(), in: .capsule)
+            } else {
+                content
+                    .background(.ultraThinMaterial)
+                    .clipShape(.capsule)
             }
         }
     }
@@ -106,6 +110,10 @@ struct NotificationBG: ViewModifier {
             if #available(iOS 26.0, *) {
                 content
                     .glassEffect(.clear, in: .rect(cornerRadius: 26))
+            } else {
+                content
+                    .background(Color(.systemGray))
+                    .clipShape(.rect(cornerRadius: 26))
             }
         }
     }

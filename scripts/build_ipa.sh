@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+# Hide iOS 26 SDK-only APIs from older SDK builds (no iOS 26 SDK available)
+export SWIFT_ACTIVE_COMPILATION_CONDITIONS="$SWIFT_ACTIVE_COMPILATION_CONDITIONS LC_NO_IOS26_UI"
+
 rm -rf build/
 mkdir -p build
 
@@ -18,6 +21,7 @@ set -o pipefail; xcodebuild \
   CODE_SIGNING_ALLOWED=NO \
   CODE_SIGNING_REQUIRED=NO \
   CODE_SIGN_IDENTITY="" \
+  SWIFT_ACTIVE_COMPILATION_CONDITIONS="DEBUG LC_NO_IOS26_UI" \
   CODE_SIGN_ENTITLEMENTS="Config/lara.entitlements" \
   archive \
   -archivePath "$PWD/build/lara.xcarchive" 2>&1 | tee /tmp/xcodebuild.log

@@ -32,6 +32,7 @@ public struct AppIcon: View {
     }
     
     public var body: some View {
+        #if !LC_NO_IOS26_UI
         if #available(iOS 26.0, *) {
             image
                 .resizable()
@@ -40,7 +41,9 @@ public struct AppIcon: View {
                 .background(Color(.systemGray6))
                 .clipShape(.rect(cornerRadius: 18))
                 .glassEffect(.regular, in: .rect(cornerRadius: 18))
-        } else {
+        } else
+        #endif
+        {
             image
                 .resizable()
                 .scaledToFit()
