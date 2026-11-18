@@ -17,6 +17,8 @@ set -o pipefail; xcodebuild \
   -sdk iphoneos \
   SDKROOT=iphoneos \
   EFFECTIVE_PLATFORM_NAME=-iphoneos \
+  SUPPORTED_PLATFORMS=iphoneos \
+  ONLY_ACTIVE_PLATFORM=NO \
   -destination "generic/platform=iOS" \
   CODE_SIGNING_ALLOWED=NO \
   CODE_SIGNING_REQUIRED=NO \
