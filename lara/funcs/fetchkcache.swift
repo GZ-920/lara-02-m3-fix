@@ -42,6 +42,18 @@ func fetchkcache() -> Bool {
 
     let fakeread = "/private/preboot/Cryptexes/OS/System/Library/CoreServices/RestoreVersion.plist"
 
+    // Bail out before touching kernel memory when the paths are not accessible
+    // (sandboxed context or a layout change in newer iOS). vn_fileredirect
+    // would otherwise resolve a bogus vnode and fault inside the kernel.
+    if access(kcpath, R_OK) != 0 {
+        globallogger.log("(fetchkcache) kernelcache path not readable: \(kcpath)")
+        return false
+    }
+    if access(fakeread, F_OK) != 0 {
+        globallogger.log("(fetchkcache) redirect anchor missing: \(fakeread)")
+        return false
+    }
+
     unlink(outpath)
 
     var ogvn: UInt64 = 0

@@ -77,18 +77,13 @@ struct SettingsView: View {
 
                             DispatchQueue.global(qos: .userInitiated).async {
                                 let fetched = fetchkcache()
-
-                                if fetched {
-                                    let dlkc = dlkcache()
-                                    DispatchQueue.main.async {
-                                        mgr.hasOffsets = dlkc
-                                        dlingkcache = false
-                                    }
-                                    return
+                                if !fetched {
+                                    globallogger.log("(fetchkcache) falling back to kernelcache download")
                                 }
+                                let ok = dlkcache()
 
                                 DispatchQueue.main.async {
-                                    mgr.hasOffsets = false
+                                    mgr.hasOffsets = ok
                                     dlingkcache = false
                                 }
                             }
