@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-# Hide iOS 26 SDK-only APIs from older SDK builds (no iOS 26 SDK available)
-export SWIFT_ACTIVE_COMPILATION_CONDITIONS="$SWIFT_ACTIVE_COMPILATION_CONDITIONS LC_NO_IOS26_UI"
+# Hide iOS 26 SDK-only APIs from older SDK builds
+# (condition is passed to xcodebuild below)
 
 rm -rf build/
 mkdir -p build
