@@ -720,14 +720,13 @@ final class laramgr: ObservableObject {
         logmsg("destroying remote call session...")
         rcready = false
         
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] () -> Void in
-            let proc: RemoteCall? = self?.sbProc
-            _ = proc?.destroy()
-
-            DispatchQueue.main.async { [weak self] () -> Void in
-                self?.logmsg("remote call session destroyed")
-                completion?()
-            }
+        let target: RemoteCall? = sbProc
+        DispatchQueue.global(qos: .userInitiated).async { () -> Void in
+            _ = target?.destroy()
+        }
+        DispatchQueue.main.async { () -> Void in
+            laramgr.shared.logmsg("remote call session destroyed")
+            completion?()
         }
     }
     
