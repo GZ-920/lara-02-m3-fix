@@ -20,7 +20,7 @@ public struct FancyButtonStyle: PrimitiveButtonStyle {
     }
     
     public func makeBody(configuration: Configuration) -> some View {
-        if #available(iOS 19.0, *) {
+        if #available(iOS 26.0, *) {
             configuration.label
                 .buttonStyle(.plain)
                 .foregroundStyle(isEnabled ? color : .gray)

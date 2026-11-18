@@ -57,7 +57,7 @@ public struct LinkCreditIcon: View {
     }
     
     public var body: some View {
-        if #available(iOS 19.0, *) {
+        if #available(iOS 26.0, *) {
             AsyncImage(url: URL(string: url)) { image in
                 image
                     .resizable()

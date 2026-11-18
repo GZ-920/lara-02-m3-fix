@@ -32,7 +32,7 @@ public struct AppIcon: View {
     }
     
     public var body: some View {
-        if #available(iOS 19.0, *) {
+        if #available(iOS 26.0, *) {
             image
                 .resizable()
                 .scaledToFit()

@@ -79,7 +79,7 @@ struct ActionBG: ViewModifier {
                     .clipShape(.capsule)
             }
         } else {
-            if #available(iOS 19.0, *) {
+            if #available(iOS 26.0, *) {
                 content
                     .glassEffect(.clear.interactive(), in: .capsule)
             }
@@ -103,7 +103,7 @@ struct NotificationBG: ViewModifier {
                     .clipShape(.rect(cornerRadius: 26))
             }
         } else {
-            if #available(iOS 19.0, *) {
+            if #available(iOS 26.0, *) {
                 content
                     .glassEffect(.clear, in: .rect(cornerRadius: 26))
             }
