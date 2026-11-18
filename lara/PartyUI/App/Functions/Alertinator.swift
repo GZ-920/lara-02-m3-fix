@@ -77,3 +77,9 @@ public class Alertinator {
         }
     }
 }
+
+nonisolated func laraAlert(title: String, body: String) {
+    Task { @MainActor in
+        Alertinator.shared.alert(title: title, body: body)
+    }
+}

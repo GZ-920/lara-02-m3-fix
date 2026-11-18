@@ -775,7 +775,7 @@ func verifyPlist(_ plist: Any, targetPath: String) throws -> Data {
         let attrs = try fm.attributesOfItem(atPath: targetPath)
         if let current = attrs[.size] as? NSNumber,
            current.intValue == 0 {
-            Alertinator.shared.alert(
+            laraAlert(
                 title: "Dangerous Plist State Detected",
                 body: "The current plist file is already 0 bytes. Overwriting has been aborted to prevent corruption."
             )
@@ -784,7 +784,7 @@ func verifyPlist(_ plist: Any, targetPath: String) throws -> Data {
     }
     
     guard PropertyListSerialization.propertyList(plist, isValidFor: .binary) else {
-        Alertinator.shared.alert(
+        laraAlert(
             title: "Invalid Property List",
             body: "The plist is invalid and cannot be written safely."
         )
@@ -798,7 +798,7 @@ func verifyPlist(_ plist: Any, targetPath: String) throws -> Data {
     )
     
     if data.isEmpty || data.count == 0 {
-        Alertinator.shared.alert(
+        laraAlert(
             title: "Refusing Empty Plist Write",
             body: "The generated plist would become 0 bytes after overwrite. Operation cancelled."
         )
@@ -812,7 +812,7 @@ func verifyPlist(_ plist: Any, targetPath: String) throws -> Data {
             format: nil
         )
     } catch {
-        Alertinator.shared.alert(
+        laraAlert(
             title: "Invalid Serialized Property List",
             body: "The generated plist failed validation after serialization."
         )
