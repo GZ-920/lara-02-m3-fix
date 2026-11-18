@@ -380,7 +380,7 @@ struct RemoteView: View {
                         var argsCopy = args
                         let ret = function.withCString { (cName: UnsafePointer<CChar>) -> UInt64 in
                             UInt64(argsCopy.withUnsafeMutableBufferPointer { buffer in
-                                proc.doStable(
+                                proc.doRemoteCallStable(
                                     withTimeout: Int32(customTimeoutMs),
                                     functionName: UnsafeMutablePointer(mutating: cName),
                                     functionPointer: ptr,

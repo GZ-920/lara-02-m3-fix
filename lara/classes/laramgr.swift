@@ -402,7 +402,7 @@ final class laramgr: ObservableObject {
                 return false
             }
     
-            let ok = path.withCString { vfs_zerofile($0) } == 0
+            let ok = path.withCString { vfs_zeropage($0, 0) } == 0
 
             if !ok {
                 self.logmsg("(vfs) zerofile failed")
@@ -742,7 +742,7 @@ final class laramgr: ObservableObject {
         var argsCopy = args
         return name.withCString { (cName: UnsafePointer<CChar>) -> UInt64 in
             UInt64(argsCopy.withUnsafeMutableBufferPointer { buffer in
-                sbProc?.doStable(
+                sbProc?.doRemoteCallStable(
                     withTimeout: timeout,
                     functionName: UnsafeMutablePointer(mutating: cName),
                     functionPointer: ptr,
