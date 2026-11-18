@@ -10,6 +10,14 @@ mkdir -p build
 echo "Build Started!"
 echo
 
+SDKVER=$(xcrun --sdk iphoneos --show-sdk-version 2>/dev/null || echo 0)
+echo "iphoneos SDK version: $SDKVER"
+case "$SDKVER" in
+  26.*|2[7-9].*|[3-9][0-9].*) COND="DEBUG" ;;
+  *) COND="DEBUG LC_NO_IOS26_UI" ;;
+esac
+echo "swift conditions: $COND"
+
 set -o pipefail; xcodebuild \
   -project lara.xcodeproj \
   -scheme lara \
@@ -23,7 +31,7 @@ set -o pipefail; xcodebuild \
   CODE_SIGNING_ALLOWED=NO \
   CODE_SIGNING_REQUIRED=NO \
   CODE_SIGN_IDENTITY="" \
-  SWIFT_ACTIVE_COMPILATION_CONDITIONS="DEBUG LC_NO_IOS26_UI" \
+  SWIFT_ACTIVE_COMPILATION_CONDITIONS="$COND" \
   CODE_SIGN_ENTITLEMENTS="Config/lara.entitlements" \
   archive \
   -archivePath "$PWD/build/lara.xcarchive" 2>&1 | tee /tmp/xcodebuild.log
