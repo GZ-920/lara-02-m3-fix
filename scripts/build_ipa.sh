@@ -12,6 +12,9 @@ set -o pipefail; xcodebuild \
   -scheme lara \
   -configuration Debug \
   -sdk iphoneos \
+  SDKROOT=iphoneos \
+  EFFECTIVE_PLATFORM_NAME=-iphoneos \
+  -destination "generic/platform=iOS" \
   -arch arm64e \
   CODE_SIGNING_ALLOWED=NO \
   CODE_SIGNING_REQUIRED=NO \
