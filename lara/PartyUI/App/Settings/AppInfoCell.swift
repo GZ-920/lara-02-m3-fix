@@ -41,8 +41,8 @@ public struct AppIcon: View {
                 .background(Color(.systemGray6))
                 .clipShape(.rect(cornerRadius: 18))
                 .glassEffect(.regular, in: .rect(cornerRadius: 18))
-        } else
-        #endif
+        }
+        #else
         {
             image
                 .resizable()
@@ -55,5 +55,6 @@ public struct AppIcon: View {
                         .stroke(Color.primary.opacity(0.2), lineWidth: 2)
                 }
         }
+        #endif
     }
 }

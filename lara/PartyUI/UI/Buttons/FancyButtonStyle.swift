@@ -29,8 +29,8 @@ public struct FancyButtonStyle: PrimitiveButtonStyle {
                 .padding()
                 .glassEffect(.regular.interactive().tint(isEnabled ? color.opacity(0.2) : Color(.systemGray).opacity(0.2)), in: AnyShape(shape))
                 .onTapGesture(perform: configuration.trigger)
-        } else
-        #endif
+        }
+        #else
         {
             configuration.label
                 .buttonStyle(.plain)
@@ -43,6 +43,7 @@ public struct FancyButtonStyle: PrimitiveButtonStyle {
                 .onTapGesture(perform: configuration.trigger)
                 .modifier(FadeAnimation())
         }
+        #endif
     }
     
 }

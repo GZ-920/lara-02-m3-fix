@@ -71,8 +71,8 @@ public struct LinkCreditIcon: View {
                 ProgressView()
                     .frame(width: 40, height: 40)
             }
-        } else
-        #endif
+        }
+        #else
         {
             AsyncImage(url: URL(string: url)) { image in
                 image
@@ -90,5 +90,6 @@ public struct LinkCreditIcon: View {
                     .frame(width: 40, height: 40)
             }
         }
+        #endif
     }
 }
