@@ -14,7 +14,6 @@
 #import "vfs.h"
 #import "sbx.h"
 #import "IconServices.h"
-#import "rc.h"
 #import "RemoteCall.h"
 
 #import <zlib.h>
