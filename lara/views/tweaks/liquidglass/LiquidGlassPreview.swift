@@ -84,13 +84,15 @@ struct ActionBG: ViewModifier {
                 content
                     .glassEffect(.clear.interactive(), in: .capsule)
             } else {
-            #else
-            if true {
-            #endif
                 content
                     .background(.ultraThinMaterial)
                     .clipShape(.capsule)
             }
+            #else
+            content
+                .background(.ultraThinMaterial)
+                .clipShape(.capsule)
+            #endif
         }
     }
 }
@@ -116,13 +118,15 @@ struct NotificationBG: ViewModifier {
                 content
                     .glassEffect(.clear, in: .rect(cornerRadius: 26))
             } else {
-            #else
-            if true {
-            #endif
                 content
                     .background(Color(.systemGray))
                     .clipShape(.rect(cornerRadius: 26))
             }
+            #else
+            content
+                .background(Color(.systemGray))
+                .clipShape(.rect(cornerRadius: 26))
+            #endif
         }
     }
 }
