@@ -73,7 +73,7 @@ public struct LinkCreditIcon: View {
             }
         }
         #else
-        {
+        if true {
             AsyncImage(url: URL(string: url)) { image in
                 image
                     .resizable()
