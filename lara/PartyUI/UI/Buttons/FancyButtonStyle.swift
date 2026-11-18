@@ -31,7 +31,7 @@ public struct FancyButtonStyle: PrimitiveButtonStyle {
                 .onTapGesture(perform: configuration.trigger)
         }
         #else
-        {
+        if true {
             configuration.label
                 .buttonStyle(.plain)
                 .foregroundStyle(isEnabled ? color : .gray)

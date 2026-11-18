@@ -79,10 +79,14 @@ struct ActionBG: ViewModifier {
                     .clipShape(.capsule)
             }
         } else {
+            #if !LC_NO_IOS26_UI
             if #available(iOS 26.0, *) {
                 content
                     .glassEffect(.clear.interactive(), in: .capsule)
             } else {
+            #else
+            if true {
+            #endif
                 content
                     .background(.ultraThinMaterial)
                     .clipShape(.capsule)
@@ -107,10 +111,14 @@ struct NotificationBG: ViewModifier {
                     .clipShape(.rect(cornerRadius: 26))
             }
         } else {
+            #if !LC_NO_IOS26_UI
             if #available(iOS 26.0, *) {
                 content
                     .glassEffect(.clear, in: .rect(cornerRadius: 26))
             } else {
+            #else
+            if true {
+            #endif
                 content
                     .background(Color(.systemGray))
                     .clipShape(.rect(cornerRadius: 26))

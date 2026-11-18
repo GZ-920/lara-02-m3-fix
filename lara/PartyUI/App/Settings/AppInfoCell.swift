@@ -43,7 +43,7 @@ public struct AppIcon: View {
                 .glassEffect(.regular, in: .rect(cornerRadius: 18))
         }
         #else
-        {
+        if true {
             image
                 .resizable()
                 .scaledToFit()
