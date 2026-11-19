@@ -100,6 +100,10 @@ struct ContentView: View {
                         DispatchQueue.main.async {
                             mgr.hasOffsets = ok
                             dlingkcache = false
+                            if !ok {
+                                laraAlert(title: "Kernelcache fetch failed",
+                                          body: "Lara could not read the running kernelcache, and the download fallback failed too. Check the logs for the exact reason.")
+                            }
                         }
                     }
                 } label: {

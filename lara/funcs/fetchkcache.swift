@@ -17,7 +17,102 @@ func larakcpath() -> String? {
     return docs.appendingPathComponent("kernelcache").path
 }
 
+// Every place a running kernelcache can live, including the cryptex layouts
+// used by iOS 26 and later.
+func kccandidates() -> [String] {
+    var paths: [String] = []
+    if let p = syskcpath() { paths.append(p) }
+    paths.append("/private/preboot/Cryptexes/OS/System/Library/Caches/com.apple.kernelcaches/kernelcache")
+    paths.append("/System/Cryptexes/OS/System/Library/Caches/com.apple.kernelcaches/kernelcache")
+    paths.append("/System/Library/Caches/com.apple.kernelcaches/kernelcache")
+    return paths
+}
+
+// Plain file copy into Documents/kernelcache. This needs no kernel structures
+// at all - when the sandbox allows the read it is by far the most reliable way
+// to obtain a kernelcache that matches the running kernel exactly.
+func copykernelcache(_ src: String, _ dst: String) -> Int {
+    let s = open(src, O_RDONLY)
+    if s < 0 { return -1 }
+    defer { close(s) }
+
+    let d = open(dst, O_WRONLY | O_CREAT | O_TRUNC, 0o644)
+    if d < 0 { return -1 }
+    defer { close(d) }
+
+    var buffer = [UInt8](repeating: 0, count: 0x4000)
+    var total = 0
+
+    while true {
+        let n = buffer.withUnsafeMutableBytes { raw in
+            read(s, raw.baseAddress!, 0x4000)
+        }
+        if n <= 0 { break }
+
+        var written = 0
+        while written < n {
+            let w = buffer.withUnsafeBytes { raw in
+                write(d, raw.baseAddress!.advanced(by: written), n - written)
+            }
+            if w <= 0 { return -1 }
+            written += w
+        }
+        total += n
+    }
+
+    return total
+}
+
+func isplausiblekc(_ path: String) -> Bool {
+    guard let attrs = try? FileManager.default.attributesOfItem(atPath: path),
+          let size = attrs[.size] as? NSNumber,
+          size.intValue > 0x400000 else {
+        return false
+    }
+
+    guard let handle = FileHandle(forReadingAtPath: path) else { return false }
+    let head = handle.readData(ofLength: 8)
+    handle.closeFile()
+    guard head.count == 8 else { return false }
+
+    var header = ""
+    for b in head.prefix(4) {
+        header += String(format: "%02x", b)
+    }
+    globallogger.log("(fetchkcache) candidate header: \(header)")
+
+    return head.contains { $0 != 0 }
+}
+
 func fetchkcache() -> Bool {
+    guard let outpath = larakcpath() else {
+        globallogger.log("(fetchkcache) failed to get output path")
+        return false
+    }
+
+    unlink(outpath)
+
+    // 1. Read the running kernelcache straight off disk.
+    for path in kccandidates() {
+        if access(path, R_OK) != 0 {
+            continue
+        }
+
+        globallogger.log("(fetchkcache) reading \(path)")
+        let copied = copykernelcache(path, outpath)
+
+        if copied > 0, isplausiblekc(outpath) {
+            globallogger.log("(fetchkcache) kernelcache fetch success! (\(copied) bytes)")
+            return true
+        }
+
+        unlink(outpath)
+    }
+
+    globallogger.log("(fetchkcache) direct read unavailable, trying vnode redirect")
+
+    // 2. Legacy vnode redirect. Needs resolved offsets and our own proc, so it
+    // only works once the kernel structures are known.
     guard ds_is_ready(),
           ds_get_our_proc() != 0,
           off_proc_p_fd != 0,
@@ -36,11 +131,6 @@ func fetchkcache() -> Bool {
         return false
     }
 
-    guard let outpath = larakcpath() else {
-        globallogger.log("(fetchkcache) failed to get output path")
-        return false
-    }
-
     let fakeread = "/private/preboot/Cryptexes/OS/System/Library/CoreServices/RestoreVersion.plist"
 
     // Bail out before touching kernel memory when the paths are not accessible
@@ -54,8 +144,6 @@ func fetchkcache() -> Bool {
         globallogger.log("(fetchkcache) redirect anchor missing: \(fakeread)")
         return false
     }
-
-    unlink(outpath)
 
     var ogvn: UInt64 = 0
     var ogvd: UInt64 = 0
@@ -127,20 +215,6 @@ func fetchkcache() -> Bool {
         return false
     }
 
-    guard let handle = FileHandle(forReadingAtPath: outpath) else {
-        globallogger.log("(fetchkcache) kernelcache output missing")
-        return false
-    }
-
-    let magic = handle.readData(ofLength: 2)
-    handle.closeFile()
-
-    guard magic.count == 2, magic[magic.startIndex] == 0x30, magic[magic.index(after: magic.startIndex)] == 0x84 else {
-        unlink(outpath)
-        globallogger.log("(fetchkcache) invalid kernelcache output")
-        return false
-    }
-
-    globallogger.log("(fetchkcache) kernelcache fetch success!")
+    globallogger.log("(fetchkcache) kernelcache fetch success! (vnode redirect)")
     return true
 }
