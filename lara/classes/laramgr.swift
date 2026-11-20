@@ -641,6 +641,7 @@ final class laramgr: ObservableObject {
     
     #if !DISABLE_REMOTECALL
     func rcinit(process: String, migbypass: Bool = false, completion: ((Bool) -> Void)? = nil) {
+        "\(process): rcinit entered dsready=\(dsready) rcready=\(rcready) rcrunning=\(rcrunning)".withCString { lara_trace_s($0) }
         guard dsready, !rcready else {
             completion?(false)
             return
@@ -651,6 +652,7 @@ final class laramgr: ObservableObject {
         logmsg("initializing remote call on \(process)...")
         
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            "\(process): constructing RemoteCall object".withCString { lara_trace_s($0) }
             self?.sbProc = RemoteCall(process: process, useMigFilterBypass: migbypass)
             
             DispatchQueue.main.async {
