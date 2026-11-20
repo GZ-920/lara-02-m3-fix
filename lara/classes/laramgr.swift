@@ -118,6 +118,7 @@ final class laramgr: ObservableObject {
                     globallogger.divider()
                 }
                 self.dsprogress = 1.0
+                "\(success ? "exploit finished ok" : "exploit finished with failure") dsready=\(self.dsready)".withCString { lara_trace_s($0) }
                 completion?(success)
             }
         }
@@ -173,6 +174,7 @@ final class laramgr: ObservableObject {
                 laramgr.shared.vfsprogress = progress
             }
         }
+        "vfsinit entered".withCString { lara_trace_s($0) }
         vfsattempted = true
         vfsfailed = false
         vfsrunning = true
@@ -199,6 +201,7 @@ final class laramgr: ObservableObject {
     
     func sbxescape(completion: ((Bool) -> Void)? = nil) {
         guard dsready, hasOffsets, !sbxrunning, !sbxready else { return }
+        "sbxescape entered".withCString { lara_trace_s($0) }
         sbxattempted = true
         sbxfailed = false
         sbxrunning = true

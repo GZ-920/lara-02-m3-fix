@@ -96,6 +96,7 @@ struct lara: App {
                 IconThemeFixupView()
             }
             .onAppear {
+                "ui appeared".withCString { lara_trace_s($0) }
                 if !isunsupported() {
                     init_offsets()
                     offsets_init()

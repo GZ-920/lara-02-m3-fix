@@ -160,7 +160,7 @@ struct ContentView: View {
                         Button("Initialize VFS", action: {
                             mgr.vfsinit()
                         })
-                        .disabled(!mgr.dsready || mgr.vfsready || mgr.vfsrunning || isdebugged())
+                        .disabled(!mgr.dsready || mgr.vfsready || mgr.vfsrunning)
                     }
                 }
                 
@@ -181,7 +181,7 @@ struct ContentView: View {
                         Button("Escape Sandbox", action: {
                             mgr.sbxescape()
                         })
-                        .disabled(!mgr.dsready || mgr.sbxready || mgr.sbxrunning || isdebugged())
+                        .disabled(!mgr.dsready || mgr.sbxready || mgr.sbxrunning)
                     }
                 }
             }
@@ -224,7 +224,7 @@ struct ContentView: View {
                             }
                         }
                     })
-                    .disabled(!mgr.dsready || isdebugged() || mgr.rcrunning || mgr.rcready)
+                    .disabled(!mgr.dsready || mgr.rcrunning || mgr.rcready)
                 }
                 
                 // destroy remotecall
