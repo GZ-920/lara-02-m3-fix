@@ -133,8 +133,11 @@ struct ContentView: View {
                         }
                     }) {
                         Button("Initialize System", action: {
-                            mgr.vfsinit()
+                            "button: Initialize System tapped".withCString { lara_trace_s($0) }
+                            // The namecache warm-up inside vfs_init needs file access,
+                            // so the sandbox has to go first.
                             mgr.sbxescape()
+                            mgr.vfsinit()
                         })
                         .disabled(!mgr.hasOffsets || !mgr.dsready || mgr.vfsrunning || mgr.sbxrunning || (mgr.vfsready && mgr.sbxready))
                     }
@@ -209,6 +212,7 @@ struct ContentView: View {
                     }
                 }) {
                     Button("Initalize RemoteCall", action: {
+                        "button: Initialize RemoteCall tapped".withCString { lara_trace_s($0) }
                         mgr.rcinit(process: "SpringBoard", migbypass: false) { success in
                             if success {
                                 mgr.logmsg("rc init succeeded!")
