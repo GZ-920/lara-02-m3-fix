@@ -193,6 +193,7 @@ final class laramgr: ObservableObject {
                     self.logmsg("\nvfs init failed.\n")
                 }
                 self.vfsrunning = false
+                "\(self.vfsready ? "vfsinit done ok" : "vfsinit done failed")".withCString { lara_trace_s($0) }
                 self.vfsprogress = 1.0
                 completion?(self.vfsready)
             }
@@ -221,6 +222,7 @@ final class laramgr: ObservableObject {
                     self.logmsg("\nsandbox escape failed.\n")
                 }
                 self.sbxrunning = false
+                "\(self.sbxready ? "sbxescape done ok" : "sbxescape done failed")".withCString { lara_trace_s($0) }
                 completion?(self.sbxready)
             }
         }
